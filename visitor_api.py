@@ -59,10 +59,15 @@ def checkin_form():
 
 @app.route("/generate_qr", methods=["POST"])
 def generate_qr():
-    # Instead of requiring name and purpose, we generate a general QR code
+    # Ensure the static/qrcodes folder exists
+    QR_CODE_FOLDER = "static/qrcodes"
+    if not os.path.exists(QR_CODE_FOLDER):
+        os.makedirs(QR_CODE_FOLDER)
+
+    # Correct URL for the check-in form
     form_url = "https://visitor-checkin.onrender.com/checkin"
 
-    # Generate the QR code linking to the form URL
+    # Generate the QR code
     qr = qrcode.make(form_url)
     qr_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
     qr_path = os.path.join(QR_CODE_FOLDER, qr_filename)
@@ -70,8 +75,9 @@ def generate_qr():
 
     return jsonify({
         "message": "QR code generated",
-        "qr_code_url": f"https://visitor-checkin.onrender.com/{qr_path}"
+        "qr_code_url": f"https://visitor-checkin.onrender.com/static/qrcodes/{qr_filename}"
     })
+
 
 
     

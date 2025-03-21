@@ -26,6 +26,28 @@ db = firestore.client()
 QR_CODE_FOLDER = "static/qrcodes"
 if not os.path.exists(QR_CODE_FOLDER):
     os.makedirs(QR_CODE_FOLDER)
+    
+@app.route("/admin")
+def admin_dashboard():
+    # Fetch visitor data from Firebase
+    checkins_ref = db.collection("checkins").stream()
+    visitors = [{"id": doc.id, **doc.to_dict()} for doc in checkins_ref]
+
+    return render_template("admin.html", visitors=visitors)
+
+@app.route("/update_status", methods=["POST"])
+def update_status():
+    data = request.json
+    visitor_id = data.get("visitor_id")
+    status = data.get("status")
+
+    if not visitor_id or status not in ["approved", "rejected"]:
+        return jsonify({"error": "Invalid request"}), 400
+
+    # Update status in Firebase
+    db.collection("checkins").document(visitor_id).update({"status": status})
+
+    return jsonify({"message": f"Visitor {status} successfully"})
 
 @app.route("/")
 def home():

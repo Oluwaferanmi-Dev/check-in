@@ -6,14 +6,37 @@
 </head>
 <body>
     <h1>Welcome to Visitor Check-In</h1>
-    <form action="/submit_checkin" method="post">
+    <form id="checkin-form">
         <label>Name:</label>
-        <input type="text" name="name" required>
+        <input type="text" id="name" required>
         <br>
         <label>Purpose of Visit:</label>
-        <input type="text" name="purpose" required>
+        <input type="text" id="purpose" required>
         <br>
         <button type="submit">Check In</button>
     </form>
+
+    <script>
+        document.getElementById("checkin-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const purpose = document.getElementById("purpose").value;
+
+            fetch("/submit_checkin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name: name, purpose: purpose })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
 </body>
 </html>
+

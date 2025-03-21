@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Visitor Check-In</title>
+    <script>
+        async function updateStatus(visitorId, status) {
+            const response = await fetch('/update_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ visitor_id: visitorId, status: status })
+            });
+            if (response.ok) {
+                alert(`Visitor ${status}`);
+                location.reload();
+            } else {
+                alert('Error updating status');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Admin Dashboard - Visitor Check-In</h1>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Purpose</th>
+            <th>Time In</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for visitor in visitors %}
+        <tr>
+            <td>{{ visitor.name }}</td>
+            <td>{{ visitor.purpose }}</td>
+            <td>{{ visitor.time_in }}</td>
+            <td>{{ visitor.status }}</td>
+            <td>
+                <button onclick="updateStatus('{{ visitor.id }}', 'approved')">Approve</button>
+                <button onclick="updateStatus('{{ visitor.id }}', 'rejected')">Reject</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

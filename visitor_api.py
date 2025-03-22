@@ -1,7 +1,7 @@
 import json
+import os
 from flask import Flask, request, jsonify, render_template
 import qrcode
-import os
 from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -13,8 +13,9 @@ app = Flask(__name__, template_folder="templates")
 if not os.path.exists("templates"):
     os.makedirs("templates")
 
-# Load Firebase credentials from a JSON file
+# 🔹 Load Firebase credentials from the serviceAccountKey.json file
 firebase_credentials_path = "serviceAccountKey.json"
+
 if not os.path.exists(firebase_credentials_path):
     raise ValueError(f"🚨 ERROR: Firebase credentials file not found at {firebase_credentials_path}")
 

@@ -9,6 +9,13 @@ from firebase_admin import credentials, firestore
 
 app = Flask(__name__, template_folder="templates")
 
+
+# 🔹 Ensure the QR code storage folder exists at startup
+QR_CODE_FOLDER = "static/qrcodes"
+if not os.path.exists(QR_CODE_FOLDER):
+    os.makedirs(QR_CODE_FOLDER)
+print("✅ QR Code Folder Exists or Created!")
+
 # Ensure the templates folder exists
 if not os.path.exists("templates"):
     os.makedirs("templates")
@@ -66,6 +73,7 @@ def checkin_form():
 @app.route("/generate_qr", methods=["POST"])
 def generate_qr():
     """Generate a QR code linking to the check-in form."""
+
     # Ensure the static/qrcodes folder exists
     if not os.path.exists(QR_CODE_FOLDER):
         os.makedirs(QR_CODE_FOLDER)
@@ -76,10 +84,13 @@ def generate_qr():
     qr_path = os.path.join(QR_CODE_FOLDER, qr_filename)
     qr.save(qr_path)
 
+    print(f"✅ QR Code Generated: {qr_path}")  # Debugging
+
     return jsonify({
         "message": "QR code generated",
         "qr_code_url": f"https://visitor-checkin.onrender.com/static/qrcodes/{qr_filename}"
     })
+
 
 
 @app.route("/submit_checkin", methods=["POST"])

@@ -6,8 +6,8 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
-app = Flask(__name__, template_folder="templates")
 
 
 # 🔹 Ensure the QR code storage folder exists at startup
@@ -112,10 +112,9 @@ def submit_checkin():
     db.collection("checkins").add(checkin_data)
     return jsonify({"message": "Check-in submitted successfully", "status": "pending"})
 
+with app.test_request_context():
+    print(app.url_map)
 
 if __name__ == "__main__":
-    
-    with app.test_request_context():
-        print(app.url_map)
         
     app.run(debug=True)

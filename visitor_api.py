@@ -91,8 +91,6 @@ def generate_qr():
         "qr_code_url": f"https://visitor-checkin.onrender.com/static/qrcodes/{qr_filename}"
     })
 
-
-
 @app.route("/submit_checkin", methods=["POST"])
 def submit_checkin():
     """Process visitor check-in form submission."""
@@ -116,4 +114,8 @@ def submit_checkin():
 
 
 if __name__ == "__main__":
+    
+    with app.test_request_context():
+        print(app.url_map)
+        
     app.run(debug=True)

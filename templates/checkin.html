@@ -2,41 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Visitor Check-In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Check-in</title>
 </head>
 <body>
-    <h1>Welcome to Visitor Check-In</h1>
+
+    <h2>Visitor Check-in</h2>
+
     <form id="checkin-form">
-        <label>Name:</label>
-        <input type="text" id="name" required>
-        <br>
-        <label>Purpose of Visit:</label>
-        <input type="text" id="purpose" required>
-        <br>
-        <button type="submit">Check In</button>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" title="Enter your full name" required autocomplete="name">
+
+        <label for="purpose">Purpose of Visit:</label>
+        <input type="text" id="purpose" name="purpose" placeholder="Enter your purpose" title="Enter your purpose of visit" required autocomplete="off">
+
+        <button type="submit">Check-in</button>
     </form>
 
     <script>
-        document.getElementById("checkin-form").addEventListener("submit", function(event) {
+        document.getElementById("checkin-form").addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            const name = document.getElementById("name").value;
-            const purpose = document.getElementById("purpose").value;
+            let formData = {
+                name: document.getElementById("name").value,
+                purpose: document.getElementById("purpose").value
+            };
 
-            fetch("/submit_checkin", {
+            let response = await fetch("/submit_checkin", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ name: name, purpose: purpose })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => console.error("Error:", error));
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                console.error("Error:", await response.text());
+                alert("Check-in failed. Please try again.");
+                return;
+            }
+
+            alert("Check-in successful!");
+            window.location.reload();
         });
     </script>
+
 </body>
 </html>
+
+
+
 

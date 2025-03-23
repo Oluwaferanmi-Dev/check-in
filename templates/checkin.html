@@ -21,29 +21,41 @@
 
     <script>
         document.getElementById("checkin-form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
+            event.preventDefault(); // Stop default form submission
+            console.log("🔹 Check-in button clicked."); // Debug log
+    
             let formData = {
                 name: document.getElementById("name").value,
                 purpose: document.getElementById("purpose").value
             };
-
-            let response = await fetch("/submit_checkin", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                console.error("Error:", await response.text());
-                alert("Check-in failed. Please try again.");
-                return;
+    
+            console.log("📤 Sending data:", formData); // Debug log
+    
+            try {
+                let response = await fetch("/submit_checkin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData)
+                });
+    
+                console.log("📝 Response status:", response.status); // Debug log
+    
+                if (!response.ok) {
+                    let errorText = await response.text();
+                    console.error("🚨 Error:", errorText);
+                    alert("❌ Check-in failed: " + errorText);
+                    return;
+                }
+    
+                alert("✅ Check-in successful!");
+                window.location.reload();
+            } catch (error) {
+                console.error("🚨 Network or JavaScript error:", error);
+                alert("❌ Check-in failed due to a network error. Check console for details.");
             }
-
-            alert("Check-in successful!");
-            window.location.reload();
         });
     </script>
+    
 
 </body>
 </html>

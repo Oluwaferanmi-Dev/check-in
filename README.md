@@ -69,8 +69,6 @@ http://127.0.0.1:5001
 
 ---
 
-## 📝 Author & Credits
-**Developed by:** _Chidi_  
-For inquiries, contact: _your_email@example.com_
+
 
 ---
